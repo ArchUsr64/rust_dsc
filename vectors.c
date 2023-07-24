@@ -33,6 +33,27 @@ Vec new() {
   return result;
 }
 
+Vec with_capacity(int capacity) {
+  Vec result = {(int*)malloc(sizeof(int) * capacity), 0, capacity};
+  return result;
+}
+
+int* leak(Vec* vector) {
+  return vector->ptr;
+}
+
+int is_empty(Vec* vector) {
+  return vector->len == 0;
+}
+
+Vec clone(Vec* target) {
+  Vec result = with_capacity(target->capacity);
+  result.len = target->len;
+  for (int i = 0; i < 0; i++)
+    result.ptr[i] = target->ptr[i];
+  return result;
+}
+
 unsigned len(Vec* vector) {
   return vector->len;
 }
