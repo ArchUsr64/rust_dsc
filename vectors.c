@@ -28,6 +28,18 @@ typedef struct {
   unsigned capacity;
 } Vec;
 
+void reserve(Vec* vector, int additional) {
+  if (vector->capacity >= additional + vector->len) {
+    return;
+  }
+  int* old = vector->ptr;
+  vector->capacity *= 2;
+  vector->ptr = malloc(sizeof(int) * vector->capacity);
+  for (int i = 0; i < vector->len; i++)
+    vector->ptr[i] = old[i];
+  free(old);
+}
+
 Vec new() {
   Vec result = {(int*)malloc(sizeof(int) * INITIAL_CAPCITY), 0, INITIAL_CAPCITY};
   return result;
@@ -63,22 +75,8 @@ unsigned capacity(Vec* vector) {
 }
 
 void push(Vec* vector, int value) {
-  if (vector->len < vector->capacity && vector->ptr != NULL) {
-    vector->ptr[vector->len] = value;
-    vector->len++;
-    return;
-  }
-  else {
-    int* old = vector->ptr;
-    vector->capacity *= 2;
-    vector->ptr = (int*)malloc(vector->capacity * sizeof(int));
-    for (int i = 0; i < vector->len; i++) {
-      vector->ptr[i] = old[i];
-    }
-    free(old);
-    vector->ptr[vector->len+1] = value;
-    vector->len++;
-  }
+    reserve(vector, 1);
+    vector->ptr[vector->len++] = value;
 }
 
 ErrorableInt pop(Vec* vector) {
@@ -94,8 +92,17 @@ ErrorableInt pop(Vec* vector) {
   return errorable;
 }
 
-/// Todo
-void insert(int index, int value);
+void insert(Vec* vector, int index, int element) {
+  reserve(vector, 1);
+  int replaced = vector->ptr[index];
+  vector->ptr[index] = element;
+  for (int i = vector->len; i > index; i--) {
+    printf("i: %d\n", i);
+    vector->ptr[i] = vector->ptr[i-1];
+  }
+  vector->len++;
+  vector->ptr[index+1] = replaced;
+}
 
 void drop(Vec* vector) {
   free(vector->ptr);
@@ -108,10 +115,6 @@ int main() {
   push(&x, 9);
   push(&x, 2);
   push(&x, 0);
-  printf("%d\n", unwrap(pop(&x)));
-  printf("%d\n", unwrap(pop(&x)));
-  printf("%d\n", unwrap(pop(&x)));
-  printf("%d\n", unwrap(pop(&x)));
-  printf("%d\n", unwrap(pop(&x)));
-  printf("%d\n", unwrap(pop(&x)));
+  insert(&x, 3, 1);
+  drop(&x);
 }
