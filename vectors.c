@@ -28,6 +28,13 @@ typedef struct {
   unsigned capacity;
 } Vec;
 
+void debug_print(Vec* vector) {
+  printf("Capacity: %d, Length: %d, Values: [", vector->capacity, vector->len);
+  for (int i = 0; i < vector->len; i++)
+    printf("%d, ", vector->ptr[i]);
+  printf("]\n");
+}
+
 void reserve(Vec* vector, int additional) {
   if (vector->capacity >= additional + vector->len) {
     return;
@@ -115,6 +122,8 @@ int main() {
   push(&x, 9);
   push(&x, 2);
   push(&x, 0);
+  debug_print(&x);
   insert(&x, 3, 1);
+  debug_print(&x);
   drop(&x);
 }
