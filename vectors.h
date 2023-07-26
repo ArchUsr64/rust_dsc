@@ -114,16 +114,3 @@ void insert(Vec* vector, int index, int element) {
 void drop(Vec* vector) {
   free(vector->ptr);
 }
-
-int main() {
-  Vec x = new();
-  push(&x, 5);
-  push(&x, 3);
-  push(&x, 9);
-  push(&x, 2);
-  push(&x, 0);
-  debug_print(&x);
-  insert(&x, 3, 1);
-  debug_print(&x);
-  drop(&x);
-}
