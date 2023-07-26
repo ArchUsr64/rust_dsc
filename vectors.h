@@ -99,6 +99,80 @@ ErrorableInt pop(Vec* vector) {
   return errorable;
 }
 
+void truncate(Vec* vector, int len) {
+  if (len >= vector->len) {
+    return;
+  }
+  vector->len = len;
+}
+
+void set_len(Vec* vector, int len) {
+  vector->len = len;
+}
+
+void swap(Vec* vector, int a, int b) {
+  int temp = vector->ptr[a];
+  vector->ptr[a] = vector->ptr[b];
+  vector->ptr[b] = temp;
+}
+
+int swap_remove(Vec* vector, int index) {
+  int result = vector->ptr[index];
+  vector->len--;
+  swap(vector, vector->len, index);
+  return result;
+}
+
+int is_sorted(Vec* vector) {
+  for (int i = 1; i < vector->len; i++) {
+    if (vector->ptr[i-1] > vector->ptr[i])
+      return 0;
+  }
+  return 1;
+}
+
+int binary_serach(Vec* vector, int key) {
+  int test_point = vector->len/2;
+  int move_distance = test_point/2;
+  move_distance = move_distance > 0 ? move_distance : 1;
+  while (test_point >= 0 && test_point < vector->len) {
+    int value = vector->ptr[test_point];
+    if (value > key) {
+      test_point -= move_distance;
+    } else if (value < key) {
+      test_point += move_distance;
+    } else {
+      return test_point;
+    }
+    move_distance /= 2;
+    move_distance = move_distance > 0 ? move_distance : 1;
+  }
+  return -1;
+}
+
+void clear(Vec* vector) {
+  vector->len = 0;
+}
+
+void append(Vec* vector, Vec* other) {
+  for (int i = 0; i < other->len; i++)
+    push(vector, other->ptr[i]);
+}
+
+int contains(Vec* vector, int value) {
+  for (int i = 0; i < vector->len; i++)
+    if (vector->ptr[i] == value)
+      return i;
+  return -1;
+}
+
+void reverse(Vec* vector) {
+  for (int i = 0; i < vector->len / 2; i++)
+    swap(vector, i, vector->len - 1 - i);
+}
+
+//TODO: remove, retain, split_off, sort
+
 void insert(Vec* vector, int index, int element) {
   if (index > vector->len) {
     return;
