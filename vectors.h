@@ -100,6 +100,9 @@ ErrorableInt pop(Vec* vector) {
 }
 
 void insert(Vec* vector, int index, int element) {
+  if (index > vector->len) {
+    return;
+  }
   reserve(vector, 1);
   int replaced = vector->ptr[index];
   vector->ptr[index] = element;
